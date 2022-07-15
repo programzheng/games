@@ -29,7 +29,7 @@ func GenerateTickets(names []string) {
 
 }
 
-func IssuedRandomTickets(count uint) error {
+func IssuedRandomTickets(count int) error {
 	tickets, err := repository.GetTickets("*")
 	if err != nil {
 		return err
@@ -49,6 +49,7 @@ func IssuedRandomTickets(count uint) error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	return nil

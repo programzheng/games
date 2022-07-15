@@ -22,7 +22,11 @@ var issuedRandomTicketsCmd = &cobra.Command{
 			fmt.Println("count is required")
 			return
 		}
-		count := helper.ConvertToUint(args[0])
+		count := helper.ConvertToInt(args[0])
+		if count <= 0 {
+			fmt.Println("count is require greater than zero")
+			return
+		}
 		err := service.IssuedRandomTickets(count)
 		if err != nil {
 			fmt.Println(err)
