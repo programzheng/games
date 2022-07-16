@@ -3,6 +3,9 @@ package service
 import (
 	"fmt"
 	"math/rand"
+	"runtime"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/programzheng/games/internal/repository"
@@ -35,21 +38,53 @@ func IssuedRandomTickets(count int) error {
 		return err
 	}
 
-	for i := 0; i < int(count); i++ {
-		unix := time.Now().UnixMicro()
-		rand.Seed(unix)
+	//default a goroutine
+	routineNum := 1
+	if count/runtime.NumCPU() > 0 {
+		routineNum = count / runtime.NumCPU()
+	}
+	issuedNumber := count / routineNum
+	remainIssuedNumber := count % routineNum
+	if remainIssuedNumber > 0 {
+		routineNum++
+	}
 
-		ticket := tickets[rand.Intn(len(tickets))]
-		sid := helper.ConvertToString(ticket.ID)
-		secret := helper.CreateMD5(int(ticket.ID) + int(unix))
+	done := make(chan struct{}, routineNum)
+	defer close(done)
 
-		colums := "ticket_id,code"
-		values := fmt.Sprintf("(%s,'%s')", sid, secret)
-		err := repository.CreateUserTickets(colums, values)
-		if err != nil {
-			return err
+	rows := ""
+	var mux sync.RWMutex
+	for num := 0; num < routineNum; num++ {
+		//last routine
+		if remainIssuedNumber > 0 && num == (routineNum-1) {
+			issuedNumber = remainIssuedNumber
 		}
+		go func(currentNum int, issuedNumber int, currentDone chan struct{}) {
+			for i := 0; i < int(issuedNumber); i++ {
+				unix := time.Now().UnixMicro()
+				rand.Seed(unix)
 
+				ticket := tickets[rand.Intn(len(tickets))]
+				sid := helper.ConvertToString(ticket.ID)
+				secret := helper.CreateMD5(rand.Intn(i + currentNum + int(ticket.ID) + int(unix)))
+
+				values := fmt.Sprintf("(%s,'%s'),", sid, secret)
+
+				mux.Lock()
+				rows += values
+				mux.Unlock()
+			}
+			currentDone <- struct{}{}
+		}(num, issuedNumber, done)
+	}
+	for i := 0; i < routineNum; i++ {
+		<-done
+	}
+	rows = strings.TrimSuffix(rows, ",")
+	colums := "ticket_id,code"
+	err = repository.CreateUserTickets(colums, rows)
+	if err != nil {
+		return err
 	}
 
 	return nil
