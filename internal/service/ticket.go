@@ -61,12 +61,12 @@ func IssuedRandomTickets(count int) error {
 		}
 		go func(currentNum int, issuedNumber int, currentDone chan struct{}) {
 			for i := 0; i < int(issuedNumber); i++ {
-				unix := time.Now().UnixMicro()
-				rand.Seed(unix)
+				unixNano := time.Now().UnixNano()
+				rand.Seed(unixNano)
 
 				ticket := tickets[rand.Intn(len(tickets))]
 				sid := helper.ConvertToString(ticket.ID)
-				secret := helper.CreateMD5(rand.Intn(i + currentNum + int(ticket.ID) + int(unix)))
+				secret := helper.CreateMD5(currentNum + i + rand.Intn(int(unixNano)))
 
 				values := fmt.Sprintf("(%s,'%s'),", sid, secret)
 
