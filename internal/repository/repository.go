@@ -10,7 +10,9 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func GetDB() *sql.DB {
+var DB = getDB()
+
+func getDB() *sql.DB {
 	conn := os.Getenv("MYSQL_DBSTRING")
 
 	DB, err := sql.Open("mysql", conn)
@@ -25,6 +27,10 @@ func generateSyntax(syntax string, args ...any) string {
 
 	debug(s)
 	return s
+}
+
+func multipleInsertSyntax(tableName string, columns string, values string) string {
+	return generateSyntax("INSERT INTO `%s` (%s) VALUES %s", tableName, columns, values)
 }
 
 func debug(result interface{}) {

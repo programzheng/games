@@ -9,8 +9,6 @@ import (
 const ticketTableName = "tickets"
 const userTicketsTableName = "user_tickets"
 
-var DB = GetDB()
-
 func CreateTicketByName(name string) error {
 	sql := generateSyntax("INSERT INTO `%s` (name) VALUES %s", ticketTableName, name)
 	_, err := DB.Exec(sql)
@@ -64,7 +62,7 @@ func GetTickets(sel string) ([]model.Ticket, error) {
 }
 
 func CreateUserTickets(columns string, values string) error {
-	sql := generateSyntax("INSERT INTO `%s` (%s) VALUES %s", userTicketsTableName, columns, values)
+	sql := multipleInsertSyntax(userTicketsTableName, columns, values)
 
 	_, err := DB.Exec(sql)
 
