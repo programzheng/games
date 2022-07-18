@@ -1,5 +1,5 @@
 if [ -z "$1" ]; then
-    echo "Usage: up or down"
+    goose -h
     exit
 fi
 
