@@ -29,12 +29,24 @@ func generateSyntax(syntax string, args ...any) string {
 	return s
 }
 
-func multipleInsertSyntax(tableName string, columns string, values string) string {
-	return generateSyntax("INSERT INTO `%s` (%s) VALUES %s", tableName, columns, values)
+func getAllSyntax(tableName string, columns string, wheres string) string {
+	return generateSyntax("SELECT %s FROM `%s` %s", columns, tableName, wheres)
+}
+
+func getFirstSyntax(tableName string, columns string, wheres string) string {
+	return generateSyntax("SELECT %s FROM `%s` %s LIMIT 1", columns, tableName, wheres)
+}
+
+func insertSyntax(tableName string, columns string, values string) string {
+	return generateSyntax("INSERT INTO `%s` (%s) VALUES %v", tableName, columns, values)
+}
+
+func getLastInsertID(tableName string) string {
+	return generateSyntax("SELECT LAST_INSERT_ID() FROM %s", tableName)
 }
 
 func debug(result interface{}) {
-	if os.Getenv("DEBUG") == "true" {
+	if os.Getenv("DB_DEBUG") == "true" {
 		log.Printf("repository debug: %v", result)
 	}
 }

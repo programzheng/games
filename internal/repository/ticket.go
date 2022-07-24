@@ -31,8 +31,8 @@ func CreateTicketsByName(names []string) error {
 	return err
 }
 
-func GetTickets(sel string) ([]model.Ticket, error) {
-	sql := generateSyntax("SELECT %s FROM `%s`", sel, ticketTableName)
+func GetTickets(columns string) ([]model.Ticket, error) {
+	sql := getAllSyntax(ticketTableName, columns, "")
 
 	rows, err := DB.Query(sql)
 	if err != nil {
@@ -62,7 +62,7 @@ func GetTickets(sel string) ([]model.Ticket, error) {
 }
 
 func CreateUserTickets(columns string, values string) error {
-	sql := multipleInsertSyntax(userTicketsTableName, columns, values)
+	sql := insertSyntax(userTicketsTableName, columns, values)
 
 	_, err := DB.Exec(sql)
 

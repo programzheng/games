@@ -29,10 +29,10 @@ var issuedRandomTicketsCmd = &cobra.Command{
 		}
 		err := service.IssuedRandomTickets(count)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Printf("issuedRandomTickets command error: %v", err)
 			return
 		}
-		fmt.Println("issuedRandomTickets success")
+		fmt.Println("issuedRandomTickets command success")
 	},
 }
 
