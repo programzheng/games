@@ -12,5 +12,5 @@ CREATE TABLE tickets (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS `tickets`
+DROP TABLE IF EXISTS `tickets`;
 -- +goose StatementEnd

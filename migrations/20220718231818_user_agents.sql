@@ -16,5 +16,5 @@ CREATE TABLE user_agents (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS `user_agents`
+DROP TABLE IF EXISTS `user_agents`;
 -- +goose StatementEnd
