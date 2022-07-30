@@ -14,7 +14,7 @@ type GenerateUserParameters struct {
 	Password string
 }
 
-type GetThridPartyUserParameters struct {
+type GetThirdPartyUserParameters struct {
 	AgentCode    string
 	ThirdPartyID string
 }
@@ -37,7 +37,7 @@ func GenerateUser(parameters *GenerateUserParameters) error {
 	return nil
 }
 
-func GetThirdPartyUser(parameters *GetThridPartyUserParameters) (*model.User, error) {
+func GetThirdPartyUser(parameters *GetThirdPartyUserParameters) (*model.User, error) {
 	err := checkParameters(parameters, "service.GetThirdPartyUser parameters is nil")
 	if err != nil {
 		return nil, err

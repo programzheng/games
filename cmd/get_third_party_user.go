@@ -28,7 +28,7 @@ var getThirdPartyUserCmd = &cobra.Command{
 		}
 		thirdPartyID := args[1]
 
-		parameters := service.GetThridPartyUserParameters{
+		parameters := service.GetThirdPartyUserParameters{
 			AgentCode:    code,
 			ThirdPartyID: thirdPartyID,
 		}
