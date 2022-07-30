@@ -81,8 +81,8 @@ func IssuedRandomTickets(count int) error {
 		<-done
 	}
 	rows = strings.TrimSuffix(rows, ",")
-	colums := "ticket_id,code"
-	err = repository.CreateUserTickets(colums, rows)
+	columns := "ticket_id,code"
+	err = repository.CreateUserTickets(columns, rows)
 	if err != nil {
 		return err
 	}
