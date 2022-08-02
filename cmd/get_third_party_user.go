@@ -14,7 +14,7 @@ import (
 // getThirdPartyUserCmd represents the getThirdPartyUser command
 var getThirdPartyUserCmd = &cobra.Command{
 	Use:   "getThirdPartyUser",
-	Short: "getThirdPart8523bb6dfc45f5898531e90d5e03a074yUser ${code} ${third_party_id}",
+	Short: "getThirdPartUser ${code} ${third_party_id}",
 	Long:  `getThirdPartyUser by code and third party id`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
