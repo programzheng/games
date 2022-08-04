@@ -6,11 +6,11 @@ import (
 )
 
 type Ticket struct {
-	ID       uint
-	Name     string
-	CreateAt time.Time
-	UpdateAt time.Time
-	DeleteAt sql.NullTime
+	ID        uint
+	Name      string
+	CreateAt  time.Time
+	UpdatedAt time.Time
+	DeleteAt  sql.NullTime
 }
 
 type UserTicket struct {
@@ -18,7 +18,7 @@ type UserTicket struct {
 	UserID    uint
 	TicketID  uint
 	Code      string
-	CreatedAt time.Time
-	UpdateAt  time.Time
-	DeletedAt sql.NullTime
+	CreateAt  time.Time
+	UpdatedAt time.Time
+	DeleteAt  sql.NullTime
 }

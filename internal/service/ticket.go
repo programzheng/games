@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"runtime"
@@ -11,6 +12,11 @@ import (
 	"github.com/programzheng/games/internal/repository"
 	"github.com/programzheng/games/pkg/helper"
 )
+
+type AssignRandomIssuedTicketToUserResult struct {
+	Name string
+	Code string
+}
 
 func GenerateTickets(names []string) {
 	ticketNames := ""
@@ -32,8 +38,46 @@ func GenerateTickets(names []string) {
 
 }
 
+func AssignRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUserResult, error) {
+	noOwnerUserTickets, err := repository.GetUserTickets("id, ticket_id, code", "WHERE user_id IS NULL")
+	if err != nil {
+		return nil, err
+	}
+	if len(noOwnerUserTickets) == 0 {
+		return nil, fmt.Errorf("userTickets not found")
+	}
+
+	unixNano := time.Now().UnixNano()
+	rand.Seed(unixNano)
+	noOwnerUserTicket := noOwnerUserTickets[rand.Intn(len(noOwnerUserTickets))]
+
+	updateCount, err := repository.UpdateUserTickets(
+		fmt.Sprintf("user_id = %d", userID),
+		fmt.Sprintf("WHERE id = %d", noOwnerUserTicket.ID),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if updateCount == 0 {
+		return nil, errors.New("no updates")
+	}
+
+	ticket, err := repository.GetTicket(
+		"name",
+		fmt.Sprintf("WHERE id = %d", noOwnerUserTicket.TicketID),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AssignRandomIssuedTicketToUserResult{
+		Name: ticket.Name,
+		Code: noOwnerUserTicket.Code,
+	}, nil
+}
+
 func IssuedRandomTickets(count int) error {
-	tickets, err := repository.GetTickets("*")
+	tickets, err := repository.GetTickets("*", "")
 	if err != nil {
 		return err
 	}

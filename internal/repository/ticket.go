@@ -31,8 +31,59 @@ func CreateTicketsByName(names []string) error {
 	return err
 }
 
-func GetTickets(columns string) ([]model.Ticket, error) {
-	sql := getAllSyntax(ticketTableName, columns, "")
+func GetTicket(columns string, wheres string) (*model.Ticket, error) {
+	sql := getFirstSyntax(ticketTableName, columns, wheres)
+
+	rows, err := DB.Query(sql)
+	if err != nil {
+		fmt.Printf("Query failed,err:%v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+	rowsColumns, err := rows.Columns()
+	if err != nil {
+		fmt.Printf("Query failed,err:%v\n", err)
+		return nil, err
+	}
+
+	var ticket model.Ticket
+	for rows.Next() {
+		for _, col := range rowsColumns {
+			switch col {
+			case "id":
+				err = rows.Scan(
+					&ticket.ID,
+				)
+			case "name":
+				err = rows.Scan(
+					&ticket.Name,
+				)
+			case "create_at":
+				err = rows.Scan(
+					&ticket.CreateAt,
+				)
+			case "updated_at":
+				err = rows.Scan(
+					&ticket.UpdatedAt,
+				)
+			case "delete_at":
+				err = rows.Scan(
+					&ticket.DeleteAt,
+				)
+			}
+
+			if err != nil {
+				fmt.Printf("Scan failed,err:%v\n", err)
+				return nil, err
+			}
+		}
+	}
+
+	return &ticket, nil
+}
+
+func GetTickets(columns string, wheres string) ([]model.Ticket, error) {
+	sql := getAllSyntax(ticketTableName, columns, wheres)
 
 	rows, err := DB.Query(sql)
 	if err != nil {
@@ -48,7 +99,7 @@ func GetTickets(columns string) ([]model.Ticket, error) {
 			&ticket.ID,
 			&ticket.Name,
 			&ticket.CreateAt,
-			&ticket.UpdateAt,
+			&ticket.UpdatedAt,
 			&ticket.DeleteAt,
 		)
 		if err != nil {

@@ -41,6 +41,10 @@ func insertSyntax(tableName string, columns string, values string) string {
 	return generateSyntax("INSERT INTO `%s` (%s) VALUES %v", tableName, columns, values)
 }
 
+func updateSyntax(tableName string, updates string, wheres string) string {
+	return generateSyntax("UPDATE `%s` SET %s %s", tableName, updates, wheres)
+}
+
 func getLastInsertID(tableName string) string {
 	return generateSyntax("SELECT LAST_INSERT_ID() FROM %s", tableName)
 }
