@@ -47,7 +47,7 @@ func GetThirdPartyUser(parameters *GetThirdPartyUserParameters) (*model.User, er
 	if err != nil {
 		return nil, err
 	}
-	if agent == nil {
+	if agent.ID == 0 {
 		return nil, fmt.Errorf("not found agent by code: %s", parameters.AgentCode)
 	}
 
@@ -57,8 +57,8 @@ func GetThirdPartyUser(parameters *GetThirdPartyUserParameters) (*model.User, er
 	if err != nil {
 		return nil, err
 	}
-	if userAgent == nil {
-		return nil, fmt.Errorf("not found user agent by third party id: %s", parameters.ThirdPartyID)
+	if userAgent.ID == 0 {
+		return nil, nil
 	}
 
 	user, err := repository.GetUserByID("*", userAgent.UserID)
