@@ -28,6 +28,22 @@ func (s *Server) RandomTicket(ctx context.Context, in *pb.RandomTicketRequest) (
 	return &pb.RandomTicketResponse{Message: "success"}, nil
 }
 
+//AssignRandomIssuedTicketToThirdPartyUser implements message.GreeterServer
+func (s *Server) AssignRandomIssuedTicketToThirdPartyUser(ctx context.Context, in *pb.AssignRandomIssuedTicketToThirdPartyUserRequest) (*pb.AssignRandomIssuedTicketToThirdPartyUserResponse, error) {
+	agentCode := in.GetCode()
+	thirdPartyID := in.GetThirdPartyID()
+
+	response, err := service.PlayAssignTicketForThirdPartyUser(agentCode, thirdPartyID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.AssignRandomIssuedTicketToThirdPartyUserResponse{
+		Code: response.Code,
+		Name: response.Name,
+	}, nil
+}
+
 func Run() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
