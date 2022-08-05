@@ -8,18 +8,31 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/lib/pq"
 )
 
 var DB = getDB()
 
 func getDB() *sql.DB {
-	conn := os.Getenv("MYSQL_DBSTRING")
+	driver := os.Getenv("DB_DRIVER")
+	connString := os.Getenv("DB_CONNECTION_STRING")
 
-	DB, err := sql.Open("mysql", conn)
-	if err != nil {
-		panic(fmt.Sprintf("connection to mysql failed:%v", err))
+	switch driver {
+	case "mysql":
+		DB, err := sql.Open("mysql", connString)
+		if err != nil {
+			panic(fmt.Sprintf("connection to mysql failed:%v", err))
+		}
+		return DB
+	case "postgres":
+		DB, err := sql.Open("postgres", connString)
+		if err != nil {
+			panic(fmt.Sprintf("connection to postgres failed:%v", err))
+		}
+		return DB
 	}
-	return DB
+
+	return nil
 }
 
 func generateSyntax(syntax string, args ...any) string {

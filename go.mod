@@ -6,6 +6,7 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/joho/godotenv v1.4.0
+	github.com/lib/pq v1.10.6
 	github.com/spf13/cobra v1.5.0
 	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0
