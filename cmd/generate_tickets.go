@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/programzheng/games/internal/service"
@@ -17,6 +18,10 @@ var generateTicketsCmd = &cobra.Command{
 	Short: "generate tickets by name to database",
 	Long:  `generateTickets ${name1},${name2},${name3}......`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("at least a ticket name")
+			return
+		}
 		ticketNames := strings.Split(args[0], ",")
 		service.GenerateTickets(ticketNames)
 	},
