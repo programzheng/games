@@ -24,6 +24,7 @@ var generateTicketsCmd = &cobra.Command{
 		}
 		ticketNames := strings.Split(args[0], ",")
 		service.GenerateTickets(ticketNames)
+		fmt.Println("generateTickets command success")
 	},
 }
 
