@@ -8,9 +8,9 @@ import (
 type Ticket struct {
 	ID        uint
 	Name      string
-	CreateAt  time.Time
+	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeleteAt  sql.NullTime
+	DeletedAt sql.NullTime
 }
 
 type UserTicket struct {
@@ -18,7 +18,7 @@ type UserTicket struct {
 	UserID    uint
 	TicketID  uint
 	Code      string
-	CreateAt  time.Time
+	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeleteAt  sql.NullTime
+	DeletedAt sql.NullTime
 }

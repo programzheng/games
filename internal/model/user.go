@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
-	ID       uint
-	CreateAt time.Time
-	UpdateAt time.Time
-	DeleteAt sql.NullTime
+	ID        uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
 }
 
 type UserAgent struct {
@@ -17,7 +17,7 @@ type UserAgent struct {
 	AgentID      uint
 	UserID       uint
 	ThirdPartyID string
-	CreateAt     time.Time
-	UpdateAt     time.Time
-	DeleteAt     sql.NullTime
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
 }

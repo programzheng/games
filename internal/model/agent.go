@@ -6,10 +6,10 @@ import (
 )
 
 type Agent struct {
-	ID       uint
-	Code     string
-	Name     string
-	CreateAt time.Time
-	UpdateAt time.Time
-	DeleteAt sql.NullTime
+	ID        uint
+	Code      string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
 }

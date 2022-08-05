@@ -53,9 +53,9 @@ func GetUserByID(columns string, id uint) (*model.User, error) {
 	for rows.Next() {
 		err = rows.Scan(
 			&user.ID,
-			&user.CreateAt,
-			&user.UpdateAt,
-			&user.DeleteAt,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+			&user.DeletedAt,
 		)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)
@@ -92,9 +92,9 @@ func GetUserAgentByAgentIDAndThirdPartyID(agentID uint, thirdPartyID string) (*m
 			&userAgent.AgentID,
 			&userAgent.UserID,
 			&userAgent.ThirdPartyID,
-			&userAgent.CreateAt,
-			&userAgent.UpdateAt,
-			&userAgent.DeleteAt,
+			&userAgent.CreatedAt,
+			&userAgent.UpdatedAt,
+			&userAgent.DeletedAt,
 		)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)
@@ -120,9 +120,9 @@ func GetUserAgentByThirdPartyID(thirdPartyID string) (*model.UserAgent, error) {
 			&userAgent.ID,
 			&userAgent.UserID,
 			&userAgent.ThirdPartyID,
-			&userAgent.CreateAt,
-			&userAgent.UpdateAt,
-			&userAgent.DeleteAt,
+			&userAgent.CreatedAt,
+			&userAgent.UpdatedAt,
+			&userAgent.DeletedAt,
 		)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)

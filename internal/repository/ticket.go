@@ -58,17 +58,17 @@ func GetTicket(columns string, wheres string) (*model.Ticket, error) {
 				err = rows.Scan(
 					&ticket.Name,
 				)
-			case "create_at":
+			case "created_at":
 				err = rows.Scan(
-					&ticket.CreateAt,
+					&ticket.CreatedAt,
 				)
 			case "updated_at":
 				err = rows.Scan(
 					&ticket.UpdatedAt,
 				)
-			case "delete_at":
+			case "deleted_at":
 				err = rows.Scan(
-					&ticket.DeleteAt,
+					&ticket.DeletedAt,
 				)
 			}
 
@@ -98,9 +98,9 @@ func GetTickets(columns string, wheres string) ([]model.Ticket, error) {
 		err = rows.Scan(
 			&ticket.ID,
 			&ticket.Name,
-			&ticket.CreateAt,
+			&ticket.CreatedAt,
 			&ticket.UpdatedAt,
-			&ticket.DeleteAt,
+			&ticket.DeletedAt,
 		)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)

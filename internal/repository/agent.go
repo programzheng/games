@@ -32,9 +32,9 @@ func GetAgentByCode(code string) (*model.Agent, error) {
 			&agent.ID,
 			&agent.Code,
 			&agent.Name,
-			&agent.CreateAt,
-			&agent.UpdateAt,
-			&agent.DeleteAt,
+			&agent.CreatedAt,
+			&agent.UpdatedAt,
+			&agent.DeletedAt,
 		)
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)
