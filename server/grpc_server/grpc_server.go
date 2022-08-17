@@ -39,8 +39,10 @@ func (s *Server) AssignRandomIssuedTicketToThirdPartyUser(ctx context.Context, i
 	}
 
 	return &pb.AssignRandomIssuedTicketToThirdPartyUserResponse{
-		Code: response.Code,
-		Name: response.Name,
+		UserTicket: &pb.UserTicket{
+			Code: response.Code,
+			Name: response.Name,
+		},
 	}, nil
 }
 
