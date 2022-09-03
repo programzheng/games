@@ -17,59 +17,19 @@ func GetUserTickets(columns string, wheres string) ([]model.UserTicket, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	rowsColumns, err := rows.Columns()
-	if err != nil {
-		fmt.Printf("Query failed,err:%v\n", err)
-		return nil, err
-	}
 
 	var userTickets []model.UserTicket
 	for rows.Next() {
 		var userTicket model.UserTicket
-		if columns == "*" {
-			err = rows.Scan(
-				&userTicket.ID,
-				&userTicket.UserID,
-				&userTicket.TicketID,
-				&userTicket.Code,
-				&userTicket.CreatedAt,
-				&userTicket.UpdatedAt,
-				&userTicket.DeletedAt,
-			)
-		} else {
-			for _, col := range rowsColumns {
-				switch col {
-				case "id":
-					err = rows.Scan(
-						&userTicket.ID,
-					)
-				case "user_id":
-					err = rows.Scan(
-						&userTicket.UserID,
-					)
-				case "ticket_id":
-					err = rows.Scan(
-						&userTicket.TicketID,
-					)
-				case "code":
-					err = rows.Scan(
-						&userTicket.Code,
-					)
-				case "created_at":
-					err = rows.Scan(
-						&userTicket.CreatedAt,
-					)
-				case "updated_at":
-					err = rows.Scan(
-						&userTicket.UpdatedAt,
-					)
-				case "deleted_at":
-					err = rows.Scan(
-						&userTicket.DeletedAt,
-					)
-				}
-			}
-		}
+		err = rows.Scan(
+			&userTicket.ID,
+			&userTicket.UserID,
+			&userTicket.TicketID,
+			&userTicket.Code,
+			&userTicket.CreatedAt,
+			&userTicket.UpdatedAt,
+			&userTicket.DeletedAt,
+		)
 
 		if err != nil {
 			fmt.Printf("Scan failed,err:%v\n", err)

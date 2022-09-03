@@ -52,7 +52,7 @@ func GetTicketsByIDs(ids []int) ([]model.Ticket, error) {
 }
 
 func AssignRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUserResult, error) {
-	noOwnerUserTickets, err := repository.GetUserTickets("id, ticket_id, code", "WHERE user_id IS NULL")
+	noOwnerUserTickets, err := repository.GetUserTickets("*", "WHERE user_id IS NULL")
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +75,10 @@ func AssignRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUser
 		return nil, errors.New("no updates")
 	}
 
+	ticketID := uint(noOwnerUserTicket.TicketID.Int64)
 	ticket, err := repository.GetTicket(
 		"name",
-		fmt.Sprintf("WHERE id = %d", noOwnerUserTicket.TicketID),
+		fmt.Sprintf("WHERE id = %d", ticketID),
 	)
 	if err != nil {
 		return nil, err

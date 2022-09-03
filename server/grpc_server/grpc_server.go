@@ -69,7 +69,8 @@ func (s *Server) GetIssuedUserTicketsByAgentCode(ctx context.Context, in *pb.Get
 	for _, userTicket := range userTickets {
 		ticketName := ""
 		for _, ticket := range tickets {
-			if userTicket.TicketID == ticket.ID {
+			userTicketID := uint(userTicket.TicketID.Int64)
+			if userTicketID == ticket.ID {
 				ticketName = ticket.Name
 			}
 		}

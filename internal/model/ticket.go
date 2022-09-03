@@ -15,8 +15,8 @@ type Ticket struct {
 
 type UserTicket struct {
 	ID        uint
-	UserID    uint
-	TicketID  uint
+	UserID    sql.NullInt64
+	TicketID  sql.NullInt64
 	Code      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
