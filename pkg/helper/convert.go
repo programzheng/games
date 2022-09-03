@@ -1,8 +1,10 @@
 package helper
 
 import (
+	"fmt"
 	"log"
 	"strconv"
+	"strings"
 )
 
 func ConvertToString(any interface{}) string {
@@ -115,4 +117,10 @@ func ConvertInterfaceToIntMap(i []interface{}) []int {
 		m[value] = i[value].(int)
 	}
 	return m
+}
+
+func ConvertIntSliceToStringSlice(ints []int) []string {
+	s := fmt.Sprint(ints)
+	r := strings.Fields(s)
+	return r
 }

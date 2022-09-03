@@ -6,14 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/programzheng/games/internal/grpc/proto"
 	"github.com/programzheng/games/internal/service"
+	"github.com/programzheng/games/pkg/helper"
 	"google.golang.org/grpc"
-)
-
-var (
-	port = flag.Int("port", 50051, "The server port")
 )
 
 // server is used to implement message.GreeterServer.
@@ -28,7 +26,7 @@ func (s *Server) RandomTicket(ctx context.Context, in *pb.RandomTicketRequest) (
 	return &pb.RandomTicketResponse{Message: "success"}, nil
 }
 
-//AssignRandomIssuedTicketToThirdPartyUser implements message.GreeterServer
+// AssignRandomIssuedTicketToThirdPartyUser implements message.GreeterServer
 func (s *Server) AssignRandomIssuedTicketToThirdPartyUser(ctx context.Context, in *pb.AssignRandomIssuedTicketToThirdPartyUserRequest) (*pb.AssignRandomIssuedTicketToThirdPartyUserResponse, error) {
 	agentCode := in.GetCode()
 	thirdPartyID := in.GetThirdPartyID()
@@ -46,7 +44,48 @@ func (s *Server) AssignRandomIssuedTicketToThirdPartyUser(ctx context.Context, i
 	}, nil
 }
 
+func (s *Server) GetIssuedUserTicketsByAgentCode(ctx context.Context, in *pb.GetIssuedUserTicketsByAgentCodeRequest) (*pb.GetIssuedUserTicketsByAgentCodeResponse, error) {
+	agentCode := in.GetCode()
+
+	users, err := service.GetUserByAgentCode(agentCode)
+	if err != nil {
+		return nil, err
+	}
+	userIDs := []int{}
+	for _, user := range users {
+		userIDs = append(userIDs, int(user.ID))
+	}
+
+	if len(userIDs) == 0 {
+		return nil, fmt.Errorf("no users")
+	}
+
+	userTickets, tickets, err := service.GetUserTicketsAndTicketsByUserIDs(userIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	grpcUserTickets := []*pb.UserTicket{}
+	for _, userTicket := range userTickets {
+		ticketName := ""
+		for _, ticket := range tickets {
+			if userTicket.TicketID == ticket.ID {
+				ticketName = ticket.Name
+			}
+		}
+		grpcUserTicket := &pb.UserTicket{
+			Code: userTicket.Code,
+			Name: ticketName,
+		}
+		grpcUserTickets = append(grpcUserTickets, grpcUserTicket)
+	}
+	return &pb.GetIssuedUserTicketsByAgentCodeResponse{
+		UserTickets: grpcUserTickets,
+	}, nil
+}
+
 func Run() {
+	port := flag.Int("port", helper.ConvertToInt(os.Getenv("GRPC_SERVER_PORT")), "The server port")
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {

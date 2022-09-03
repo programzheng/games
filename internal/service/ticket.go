@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/programzheng/games/internal/model"
 	"github.com/programzheng/games/internal/repository"
 	"github.com/programzheng/games/pkg/helper"
 )
@@ -36,6 +37,18 @@ func GenerateTickets(names []string) {
 		panic(err)
 	}
 
+}
+
+func GetTicketsByIDs(ids []int) ([]model.Ticket, error) {
+	ticketsIDs := helper.ConvertIntSliceToStringSlice(ids)
+
+	ticketsWhere := fmt.Sprintf("WHERE id IN (%s) ", strings.Trim(strings.Join(ticketsIDs, ","), "[]"))
+	tickets, err := repository.GetTickets("*", ticketsWhere)
+	if err != nil {
+		return nil, err
+	}
+
+	return tickets, nil
 }
 
 func AssignRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUserResult, error) {
