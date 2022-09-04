@@ -46,6 +46,10 @@ func getAllSyntax(tableName string, columns string, wheres string) string {
 	return generateSyntax("SELECT %s FROM `%s` %s", columns, tableName, wheres)
 }
 
+func getAllSyntaxForUpdate(tableName string, columns string, wheres string) string {
+	return generateSyntax("SELECT %s FROM `%s` %s FOR UPDATE", columns, tableName, wheres)
+}
+
 func getAllWithJoinSyntax(tableName string, columns string, wheres string, join string) string {
 	return generateSyntax("SELECT %s FROM `%s` %s %s", columns, tableName, join, wheres)
 }

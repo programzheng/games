@@ -51,6 +51,51 @@ func GetTicketsByIDs(ids []int) ([]model.Ticket, error) {
 	return tickets, nil
 }
 
+func AssignOnceRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUserResult, error) {
+	userTickets, err := repository.GetUserTicketsForUpdate("*", "")
+	if err != nil {
+		return nil, err
+	}
+	for _, userTicket := range userTickets {
+		if int(userTicket.UserID.Int64) == userID {
+			return nil, fmt.Errorf("have user tickets")
+		}
+	}
+
+	noOwnerUserTicket := &model.UserTicket{}
+	for _, userTicket := range userTickets {
+		if !userTicket.UserID.Valid {
+			noOwnerUserTicket = &userTicket
+			break
+		}
+	}
+
+	updateCount, err := repository.UpdateUserTickets(
+		fmt.Sprintf("user_id = %d", userID),
+		fmt.Sprintf("WHERE id = %d", noOwnerUserTicket.ID),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if updateCount == 0 {
+		return nil, errors.New("no updates")
+	}
+
+	ticketID := uint(noOwnerUserTicket.TicketID.Int64)
+	ticket, err := repository.GetTicket(
+		"name",
+		fmt.Sprintf("WHERE id = %d", ticketID),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AssignRandomIssuedTicketToUserResult{
+		Name: ticket.Name,
+		Code: noOwnerUserTicket.Code,
+	}, nil
+}
+
 func AssignRandomIssuedTicketToUser(userID int) (*AssignRandomIssuedTicketToUserResult, error) {
 	noOwnerUserTickets, err := repository.GetUserTickets("*", "WHERE user_id IS NULL")
 	if err != nil {
